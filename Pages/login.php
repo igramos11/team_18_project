@@ -55,7 +55,7 @@
 			<div class="container" style="background-color:#f1f1f1">
 				<!-- <span class="psw">Forgot <a href="#">password?</a></span> -->
 				<button type="button" style="background-color: #0439aa;">
-					<a href="../pages/userForm.php" class="signup">
+					<a href="../pages/clientRegistration.php" class="signup">
 						Don't have an Account? Sign up now!
 					</a>
 				</button>
