@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!-- <?php
 // @codeCoverageIgnoreStart
-	//include('../php/loginAction.php');
     require_once "../php/functions.php";
     require_once "../php/config.php";
 
@@ -27,17 +26,9 @@
        print_r($conn->error_list);
 	   $stmt->bind_param("isssssds",$User, $St, $Ciudad, $Estado, $Zip, $Gal, $Total, $Date);
 	   $stmt->execute();
+       $_SESSION['flash'] = "Your order has been submitted. Check the Quote History tab to view your order history.";
 	   $Order_ID = $stmt->insert_id;
 	   $stmt->close();
-   	//    $sql="INSERT INTO `Order` (User_ID, Street_delivered_to, City_delivered_to, State_delivered_to, Zip_code_delivered_to, Order_total, Date_of_purchase)
-    //    VALUES ($User, $St, $Ciudad, $Estado, $Zip, $Total, $Date)";
-    //    $result=mysqli_query($conn,$sql);
-    //    if($result){
-    //        header('Location: user.php');
-    //    }
-    //    else{
-    //        die(mysqli_error($conn));
-    //    }
    	}
 // @codeCoverageIgnoreEnd ghh
 ?>  -->
@@ -74,6 +65,17 @@
         text-align: center;
         margin: 10px auto;
 	}
+
+    .flash-message {
+        background-color: #dff0d8;
+        border-color: #d0e9c6;
+        color: #3c763d;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        text-align: center;
+    }
     
 </style>
 <head>
@@ -91,6 +93,12 @@
 </head>
 
 <body id="top">
+    <?php
+    if (isset($_SESSION['flash'])) {
+        echo '<div class="flash-message">' . $_SESSION['flash'] . '</div>';
+        unset($_SESSION['flash']);
+    }
+    ?>
 	<header>
 		<a href="">
 			<img src="../images/logo1.png">
