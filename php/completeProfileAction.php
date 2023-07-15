@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apt = trim($_POST['APT']);
     $city = trim($_POST['City']);
     $state = trim($_POST['State']);
+    
     $zipCode = trim($_POST['ZipCode']);
 
     // Validate the form data
