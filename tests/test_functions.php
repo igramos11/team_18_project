@@ -41,15 +41,15 @@
          */
         public function test_accountDetailsAction(){
             $args = array('User_ID'=>-1, 
-                'First_name'=>'David', 
-                'Last_name'=>'Silva', 
-                'Email'=>'david.silva.25812@gmail.com',
-                'Phone_number'=>'13123',
-                'Street_address'=>'foo',
+                'firstName'=>'David', 
+                'lastName'=>'Silva', 
+                'email'=>'david.silva.25812@gmail.com',
+                'phoneNumber'=>'13123',
+                'Address'=>'foo',
                 'APT'=>NULL,
                 'City'=>'foo',
                 'State'=>'foo',
-                'Zip'=>'foo',
+                'ZipCode'=>'foo',
                 'Username'=>'foo',
                 'Password'=>'foo'
             );
