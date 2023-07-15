@@ -1,91 +1,77 @@
-
 <!DOCTYPE html>
+
+<?php
+	include('../php/loginAction.php');
+?>
 <html>
 
 <?php
-require_once "../php/config.php";
-require_once "../php/functions.php";
-// Start the session
-session_start();
-
-// Check if the user is logged in
-if (!isset($_SESSION['login_user'])) {
-    // If not, redirect to the login page
-    header('Location: ../pages/login.php');
-    exit;
-}
-
-// If logout is requested, destroy the session and redirect to the current page
-if (isset($_GET['logout'])) {
-    session_destroy();
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
-}
-
-echo '<p style="font-size: 20px; font-weight: bold;">Welcome, ' . htmlspecialchars($_SESSION['login_user']) . '!</p>';
-
-
-
-
-$userId = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM user WHERE User_ID = ?");
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-
-$result = $stmt->get_result();
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-}
-
+    require_once "../php/config.php";
+    $User_ID = $_SESSION['user_id'];
+    $sql = "SELECT firstName, lastName, Address, APT, City, State, ZipCode, Username FROM `user` WHERE User_ID = ?;";
+    $stmt = mysqli_stmt_init($conn);
+    mysqli_stmt_prepare($stmt, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $User_ID);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
 
 ?>
-
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Team 18 Edit Profile Page</title>
-    <link rel="stylesheet" type="text/css" href="../css/user.css">
+    <title>Team 18</title>
     <link rel="stylesheet" type="text/css" href="../css/accountDetails.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="icon" type="image/x-icon" href="../images/fuelpump.jpeg">
     <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
 </head>
 
-    <header>
-        <!-- Navbar Starts -->
-        <nav>
-            <ul>
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="userDashboard.php">User Dashboard</a></li>
-                <li><a href="orderHistory.php">Quote History</a></li>
-                <li><a href="user.php">Request New Quote</a></li>
-                <?php if (isset($_SESSION['login_user'])) { ?>
-                                <li><a href="?logout">Logout</a></li>
-                            <?php } ?>
-                        </div>
-            </ul>
-        </nav>
-        <!-- Navbar End -->
-    </header>
+<header>
+    <a href="user.php">
+        <img src="../images/fuelpump.jpeg">
+    </a>
+    <!-- Navbar Starts -->
+    <nav>
+        <ul>
+            <li><a href="user.php">Home</a></li>
+            <li>
+                <div class="dropdown">
+                    <a href="#" class="drop-btn">
+                        Profile
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <!-- <a href="#">Profile Management</a> -->
+                        <a href="#">Account Details</a>
+                        <a href="../index.php">Log Out</a>
+                    </div>
+                </div>
+            </li>
 
-    <body>
+            <li><a href="orderHistory.php">Quote History</a></li>
+
+            <li><a href="user.php#menu-section" class="order-btn btn btn-primary">Order Now</a></li>
+        </ul>
+    </nav>
+    <!-- Navbar End -->
+</header>
+
+<body>
     <div class="grid-container">
         <div class="grid-item aboutInfo">
-        <h2 class="name"><?php echo isset($user['firstName']) ? htmlspecialchars($user['firstName']) . ' ' . htmlspecialchars($user['lastName']) : ''; ?></h2>
-<p id="displayEmail"><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : ''; ?></p>
-<h2 id="about">About</h2>
-<p><?php echo '@' . (isset($user['Username']) ? htmlspecialchars($user['Username']) : ''); ?></p>
-<p><?php echo '<b>Phone: </b>'. (isset($user['phoneNumber']) ? htmlspecialchars($user['phoneNumber']) : ''); ?></p>
-<p><span style="font-weight: 600">Shipping Address:</span><br>
-<?php echo (isset($user['Address']) ? htmlspecialchars($user['Address']) : '');
-if(isset($user['APT'])) {
-    echo htmlspecialchars($user['APT']) . ', ';
-}
-echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (isset($user['State']) ? htmlspecialchars($user['State']) : '') . ', ' . (isset($user['zipCode']) ? htmlspecialchars($user['zipCode']) : ''); ?>
-</p>
-
+            <h2 class="name"><?php echo $row['firstName'] . ' ' . $row['lastName']?></h2>
+            <p id="displayEmail"><?php echo $row['email']?></p>
+            <h2 id="about">About</h2>
+            <p><?php echo '@' . $row['Username']?></p>
+            <p><?php echo '<b>Phone: </b>'. $row['phoneNumber']?></p>
+            <p><span style="font-weight: 600">Shipping Address:</span><br>
+            <?php echo $row['Address'] . ', ';
+            if($row['APT']) {
+                echo $row['APT'] . ', ';
+            }
+            echo $row['City'] . ', ' . $row['State'] . ', ' . $row['zipCode']?>
+            </p>
 
         </div>
         <div class="grid-item">
@@ -96,15 +82,17 @@ echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (iss
                         <div class="flex-grid">
                             <div class="col">
                                 <label for="firstName"><b>First name:</b></label>
-                                <input type="text" name="firstName" required value="<?php echo isset($user['firstName']) ? htmlspecialchars($user['firstName']) : ''; ?>">
+                                <input type="text" name="firstName" id="firstName" required value="<?= $row['firstName'] ?>" value=<?= $row['firstName'] ?> >
+
                             </div>
                             <div class="col">
                                 <label for="lastName"><b>Last name:</b></label>
-                                <input type="text" name="lastName" required value="<?php echo isset($user['lastName']) ? $user['lastName'] : ''; ?>">
+                                <input type="text" name="lastName" id="lastName" placeholder="<?= $row['lastName'] ?>" value=<?= $row['lastName'] ?> >
 
                                 <label for="phoneNumber"><b>Phone number:</b></label>
-                                <input type="text" name="phoneNumber" placeholder="<?php echo (isset($user['phoneNumber']) && $user['phoneNumber'] != '') ? $user['phoneNumber'] : 'Enter phone number'; ?>" value="<?php echo (isset($user['phoneNumber']) && $user['phoneNumber'] != '') ? $user['phoneNumber'] : ''; ?>">
-
+                                <input type="text" name="phoneNumber" id="phoneNumber" placeholder="<?php if ($row['phoneNumber'])
+                                                                                                                echo $row['phoneNumber'];
+                                                                                                            else echo 'Enter phone number';?>" value=<?= $row['phoneNumber']?>>
                             </div>
                         </div>
                     </div>
@@ -115,24 +103,22 @@ echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (iss
                         <div class="flex-grid">
                             <div class="col">
                                 <label for="Address"><b>Street address:</b></label>
-                                <input type="text" name="Address" required value="<?php echo isset($user['Address']) ? $user['Address'] : ''; ?>">
+                                <input type="text" name="Address" id="Address" placeholder="<?= $row['Address'] ?>" value="<?= $row['Address'] ?>">
 
                                 <label for="APT"><b>APT:</b></label>
-                                <input type="text" name="APT" id="APT" placeholder="<?php if ($user['APT'])
-                                                                                                echo $user['APT'];
-                                                                                            else echo 'Enter APT';?>" value="<?= $user['APT'] ?>" >
+                                <input type="text" name="APT" id="APT" placeholder="<?php if ($row['APT'])
+                                                                                                echo $row['APT'];
+                                                                                            else echo 'Enter APT';?>" value="<?= $row['APT'] ?>" >
 
                                 <label for="Zip"><b>Zipcode:</b></label>
-                                <input type="text" name="zipCode" required value="<?php echo isset($user['ZipCode']) ? $user['ZipCode'] : ''; ?>">
-
+                                <input type="text" name="Zipcode" id="Zipcode" placeholder="<?= $row['Zipcode'] ?>" value=<?= $row['Zipcode'] ?>>
                             </div>
                             <div class="col">
                                 <label for="City"><b>City:</b></label>
-                                <input type="text" name="City" required value="<?php echo isset($user['City']) ? $user['City'] : ''; ?>">
+                                <input type="text" name="City" id="City" placeholder="<?= $row['City'] ?>" value=<?= $row['City'] ?>>
 
                                 <label for="State"><b>State:</b></label>
-                                <input type="text" name="state" required value="<?php echo isset($user['State']) ? $user['State'] : ''; ?>">
-
+                                <input type="text" name="State" id="State" placeholder="<?= $row['State'] ?>" value=<?= $row['State'] ?>>
                             </div>
                         </div>
                     </div>
@@ -143,7 +129,7 @@ echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (iss
                         <div class="flex-grid">
                             <div class="col">
                                 <label for="Username"><b>*Username: </b><i style="font-size: 14px">Required</i></label>
-                                <input type="text" name="Username" id="Username" placeholder="<?= $user['Username'] ?>" value =<?= $user['Username'] ?> required>
+                                <input type="text" name="Username" id="Username" placeholder="<?= $row['Username'] ?>" value =<?= $row['Username'] ?> required>
                             </div>
                             <div class="col">
                                 <label for="Password"><b>*Password: </b><i style="font-size: 14px">Required</i></label>
@@ -199,32 +185,4 @@ echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (iss
     }
 </script>
 
-</html>
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $email = $_POST['email'];
-    $phoneNumber = $_POST['phoneNumber'];
-    $Address = $_POST['Address'];
-    $APT = $_POST['APT'];
-    $City = $_POST['city'];
-    $State = $_POST['state'];
-    $ZipCode = $_POST['zipCode'];
-
-    $updateStmt = $conn->prepare("UPDATE user SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?,  Address = ?, APT = ?,  City = ?, State = ?, ZipCode = ? WHERE User_ID = ?");
-    $updateStmt->bind_param("ssssssi", $firstName, $lastName, $email, $phoneNumber, $Address, $APT, $City, $State,  $ZipCode, $userId);
-    $updateStmt->execute();
-
-    // Fetch the updated user data
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-    }
-}
-
-$stmt->close();
-$conn->close();
-?>
 </html>
