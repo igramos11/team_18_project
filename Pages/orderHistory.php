@@ -1,7 +1,42 @@
 <!DOCTYPE html>
 <html>
+
+<?php
+require_once "../php/config.php";
+require_once "../php/functions.php";
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['login_user'])) {
+    // If not, redirect to the login page
+    header('Location: ../pages/login.php');
+    exit;
+}
+// If logout is requested, destroy the session and redirect to the current page
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+$userId = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM user WHERE User_ID = ?");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+}
+
+
+?>
+
+<!DOCTYPE html>
+<html>
 <head>
-    <title>Team 18</title>
+    <title>Team 18 Order History Page</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -78,6 +113,7 @@
             width: 100%;
             height: 200px; /* Adjust the height as needed */
             margin-top: -55px;
+            margin-bottom: 30px;
         }
 
         
@@ -89,35 +125,37 @@
 <div class="banner-image"></div>
 
 <header>
-    <a href="">
+    <a href="../index.php">
         <img src="../images/logo1.png">
+        
     </a>
     <nav>
         <ul>
-            <li><a href="user.php">Home</a></li>
-            <li>
-                <div class="dropdown">
-                    <a href="#" class="drop-btn">
-                        Profile
-                        <i class="fa fa-caret-down"></i>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="../index.php">Log Out</a>
-                    </div>
-                </div>
-            </li>
-            <li><a href="#">Quote History</a></li>
+            <li><a href="../index.php">Home</a></li>
+            <li><a href="userDashboard.php">User Dashboard</a></li>
+            <li><a href="editProfile.php">Edit Profile</a></li>
+            <li><a href="user.php">Order a Quote</a></li>
+            <?php if (isset($_SESSION['login_user'])) { ?>
+                                <li><a href="?logout">Logout</a></li>
+                            <?php } ?>
+                        </div>
+                
+           
         </ul>
     </nav>
 </header>
 
 <section>
     <div>
-        <h2 style="margin-top: -5px;">Stats:</h2>
+    <?php
+        echo '<p style="font-size: 20px; font-weight: bold;">Welcome, ' . htmlspecialchars($_SESSION['login_user']) . '!</p>';
+    ?>
+
+        <h2 style="margin-top: 20px;">Stats:</h2>
         <table>
             <tr>
-                <th>Total Number of Orders:</th>
-                <th>Total Sales:</th>
+               <th style="color: navy;">Total Number of Orders:</th>
+               <th style="color: navy;">Total Sales:</th>
             </tr>
             <tr>
                 <?php
@@ -134,8 +172,8 @@
     </div>
 
     <div>
-        <h2 style="margin-top: 10px;">Orders:</h2>
-        <div style="border: 3px solid rgb(0, 0, 0); background-color: rgb(233, 233, 233); height: 900px;">
+        <h2 style="margin-top: 10px; ">Orders:</h2>
+        <div style="border: 3px solid rgb(0, 0, 0); background-color: rgb(233, 233, 233); height: 900px; color: navy;">
             <table>
                 <tr>
                     <th>Order ID</th>
@@ -161,15 +199,16 @@
                     $dateOfPurchase = $row['Date_of_purchase'];
 
                     echo '<tr>';
-                    echo '<td>'.$id.'</td>';
-                    echo '<td>'.$street.'</td>';
-                    echo '<td>'.$city.'</td>';
-                    echo '<td>'.$state.'</td>';
-                    echo '<td>'.$zip.'</td>';
-                    echo '<td>'.$gallons.'</td>';
-                    echo '<td>'.$total.'</td>';
-                    echo '<td>'.$dateOfPurchase.'</td>';
+                    echo '<td style="color: black;">'.$id.'</td>';
+                    echo '<td style="color: black;">'.$street.'</td>';
+                    echo '<td style="color: black;">'.$city.'</td>';
+                    echo '<td style="color: black;">'.$state.'</td>';
+                    echo '<td style="color: black;">'.$zip.'</td>';
+                    echo '<td style="color: black;">'.$gallons.'</td>';
+                    echo '<td style="color: black;">'.$total.'</td>';
+                    echo '<td style="color: black;">'.$dateOfPurchase.'</td>';
                     echo '</tr>';
+
                 }
                 ?>
             </table>
@@ -180,11 +219,10 @@
 <footer>
     <div class="footer-content text-center" style="margin-bottom: 10%">
         <p class="copyright">
-            © Designed by <a href="#">Team # COSC 4353</a>. All rights reserved.
+            © Designed by <a href="#">Team #18  COSC 4353</a>. All rights reserved.
         </p>
         <a href="#top">Go to top.</a>
     </div>
 </footer>
 </body>
 </html>
-
