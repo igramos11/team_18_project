@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-
     require_once "../php/functions.php";
     require_once "../php/config.php";
 
@@ -13,15 +12,15 @@
         header('Location: ../pages/login.php');
         exit;
     }
+
     // If logout is requested, destroy the session and redirect to the current page
     if (isset($_GET['logout'])) {
-    session_destroy();
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
+        session_destroy();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
     }
 
     echo '<p style="font-size: 20px; font-weight: bold;">Welcome, ' . htmlspecialchars($_SESSION['login_user']) . '!</p>';
-
 
     $UserId = $_SESSION['user_id'];
     $sql = "SELECT * FROM `user` WHERE User_ID = '$UserId'";
@@ -31,27 +30,38 @@
     $City=$row['City'];
     $State=$row['State'];
     $ZipCode=$row['ZipCode'];
-   	if(isset($_POST['submit'])){
-	   $UserId = $_SESSION['user_id'];
-	   $User = $UserId;
-       $Address=$_POST['Address'];
-       $City=$_POST['City'];
-       $State=$_POST['State'];
-       $ZipCode=$_POST['ZipCode'];
-	   $Gal = $_POST['Gallons'];
-	   $Total = CalculateTotal($conn,$Gal,$User, $State);
-	   $Date= $_POST['Date'];
-	   $stmt = $conn->prepare("INSERT INTO `order` (User_ID, Street_delivered_to, City_delivered_to, State_delivered_to, Zip_code_delivered_to, Gallons, Order_total, Date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-       if (!empty($conn->error_list)) {
-        print_r($conn->error_list);
-        }
-	   $stmt->bind_param("isssssds",$User, $Address, $City, $State, $ZipCode, $Gal, $Total, $Date);
-	   $stmt->execute();
-       $_SESSION['flash'] = "Your order has been submitted. Check the Quote History tab to view your order history.";
-	   $Order_ID = $stmt->insert_id;
-	   $stmt->close();
+    $profitMargin = $row['profitMargin'] * 100 ; // Add profit margin field from user table
+
+    $profitMargin = $row['profitMargin'] * 100 ; // Add profit margin field from user table
+
+    // calculate rate based on profit margin
+    if ($profitMargin >= 0 && $profitMargin <= 5) {
+    $rate = 0.08;
+    } elseif ($profitMargin >= 6 && $profitMargin <= 11) {
+    $rate = 0.10;
+    } else {
+    $rate = 0; // set to default rate or throw an error
     }
+
+
+    $clientStatus = clientStatus($conn, $UserId); // Use a function to check if the user is a new or existing customer
+    $inState = $State === 'TX' ? 1 : 0; // Use a ternary operator to determine if the client is in-state (1) or out-of-state (0)
+
+    if(isset($_POST['submit'])){
+        $UserId = $_SESSION['user_id'];
+        $User = $UserId;
+        $Address=$_POST['Address'];
+        $City=$_POST['City'];
+        $State=$_POST['State'];
+        $ZipCode=$_POST['ZipCode'];
+        $Gallons = $_POST['Gallons'];
+        $Total = CalculateTotal($conn,$Gallons,$User, $State, $clientStatus, $profitMargin, $inState, $rate); // pass the rate to the CalculateTotal function
+        $Date= $_POST['Date'];
+        // More code here...
+    }
+    // More code here...
 ?>
+
 
 <html lang="en">
 <style>
@@ -158,6 +168,12 @@
                             <span class="data-title">Gallons:</span>
                         </label>
                         <input type="text" class="input_box" inputmode="numeric" pattern="\d*" name="Gallons" required>
+                    </div>
+                    <div class="">
+                        <label style="display: block;"> 
+                            <span class="data-title">Company's Profit Margin (%):</span>
+                        </label>
+                        <input type="text" class="input_box" name="profitMargin" value="<?php echo $profitMargin;?>" readonly required>
                     </div>
                     <div class="">
                         <label style="display: block;">

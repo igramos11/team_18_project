@@ -121,7 +121,18 @@ function validate($data){
 }
 
 
-
+function clientStatus($conn, $User_ID){
+    //SQL Query HERE//
+    $sql = "SELECT COUNT(*) AS Count FROM `Order` WHERE User_ID= '$User_ID'";
+    $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+    $row = mysqli_fetch_assoc($result);
+    if($row["Count"] > 0){
+        return 1; // Returning 1 if the client is an existing customer
+    }
+    else{
+        return 0; // Returning 0 if the client is a new customer
+    }
+}
 
 
 
@@ -161,17 +172,41 @@ function GallonsRequested($conn,$num){
         return $R;
     }
 }
-        
-        function CalculateTotal($conn, $Gallns, $User_ID, $St){
-            $CurrentPrice = 1.50;
-            $RateHistory=PreviousQuotes($conn,$User_ID);
-            $Location = State_or_Outside($conn, $St);
-            $Gallons = GallonsRequested($conn, $Gallns);
-            $Company = .1;
-            // echo $Gallons;
-            $Mrg = ($Location-$RateHistory+$Gallons+$Company) * $CurrentPrice;
-            $Margin = $CurrentPrice+ $Mrg;
-            $SuggestedPrice = $Gallns * $Margin;
-            return $SuggestedPrice;
-        }
-        
+
+function CalculateTotal($conn, $Gallons, $User, $State, $clientStatus, $profitMargin, $inState, $rate) {
+    // Check if the user is in-state or out-of-state
+    $locationFactor = $inState ? 0.02 : 0.04; // 2% for in-state, 4% for out-of-state
+
+    // Check if the user is a new customer or an existing customer
+    $historyFactor = $clientStatus ? 0.01 : 0; // 1% for existing customers, 0% for new customers
+
+    // Check the number of gallons requested
+    $gallonsFactor = $Gallons > 1000 ? 0.02 : 0.03; // 2% for more than 1000 gallons, 3% for less
+
+    // Calculate the price per gallon
+    $pricePerGallon = 1.50 + (1.50 * ($locationFactor - $historyFactor + $gallonsFactor + ($profitMargin / 100)));
+
+    // Calculate the total amount
+    $totalAmount = $Gallons * $pricePerGallon;
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO `Order` (User_ID, Gallons_Requested, Delivery_Address, Delivery_State, Delivery_Zipcode, Delivery_Date, Total_Amount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("iissssd", $User, $Gallons, $Address, $State, $ZipCode, $Date, $totalAmount);
+
+    // Execute the statement
+    $stmt->execute();
+
+    if ($stmt->error) {
+        die("Execution failed: " . $stmt->error);
+    }
+
+    // Close the statement
+    $stmt->close();
+
+    return $totalAmount;
+}

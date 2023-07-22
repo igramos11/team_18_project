@@ -11,7 +11,7 @@
     border: none;
     cursor: pointer;
     font-weight: bold;
-}
+} 
 
 .change:hover, .checkout:hover {
     opacity: 0.8;
@@ -194,7 +194,7 @@ header li a {
     padding: 14px 16px;
     background-color: inherit;
     font-family: inherit;
-    margin: 0;
+    margin: 1;
 }
 
 /* Dropdown content (hidden by default) */
@@ -208,6 +208,8 @@ header li a {
 }
 
 /* Links inside the dropdown */
+/* Links inside the dropdown */
+
 .dropdown-content a {
     /* float: none; */
     color: black;

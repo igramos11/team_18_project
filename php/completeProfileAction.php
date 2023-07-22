@@ -20,10 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apt = trim($_POST['APT']);
     $city = trim($_POST['City']);
     $state = trim($_POST['State']);
-    
     $zipCode = trim($_POST['ZipCode']);
 
-    // Validate the form data
+    // Validate the form data 
     if (empty($firstName) || empty($lastName) || empty($email) || empty($phoneNumber) || empty($address) || empty($city) || empty($state) || empty($zipCode)) {
         // Redirect back to form with error message
         header("Location: completeProfile.php?error=emptyfields");
