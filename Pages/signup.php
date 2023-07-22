@@ -31,7 +31,8 @@
 
             <div class="entry">
                 <label for="Password"><b>Password:</b></label>
-                <input type="password" name="Password" id="Password" placeholder="Enter password" required>
+                <input type="password" name="Password" id="Password" placeholder="Enter password" pattern=".{8,}" title="Password must be at least 8 characters long" required>
+
             </div>
             <hr>
         </div>
