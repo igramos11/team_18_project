@@ -5,25 +5,33 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-    <link rel="icon" type="image/x-icon" href="../images/fuelpump.jpeg">
 	<link rel="stylesheet" type="text/css" href="../css/main_page.css">
 	<link rel="stylesheet" type="text/css" href="../css/login.css">
 	<script src="../js/script.js"></script>
-	
-<body id="#top">
+</head>
+
+<body id="top">
 	<header>
+	<a href="index.php">
+        	<img src="../images/logo1.png">
+    	</a>
 		<!-- Navbar Starts -->
 		<nav>
 			<ul>
-				<li><a href="../index.php">Return to Home</a></li>
+				<li><a href="../index.php">Home</a></li>
 			</ul>
 		</nav>
 		<!-- Navbar End -->
 	</header>
 
 	<section>
-		<form action="../php/loginAction.php" method="post">
+	<div class="welcome" style="text-align: left;">
+    <h1 style="color: black; margin-bottom: 20px; background-color: #ffffff;">Welcome back! Ready to fuel up?</h1>
+    <p1 style="margin-bottom: 20px;">Please login below</p1>
+</div>
+
+<form action="../php/loginAction.php" method="post" style="margin-top: 20px;">
+
 			<div class="imgcontainer">
 				<img src="../images/login icon.png" alt="Avatar" class="avatar">
 			</div>
@@ -44,22 +52,15 @@
 							echo "<style> .invalid {color: red; text-align: center;}</style><p class='invalid'> Invalid username or password. Please try again!</p>";
 						}
 					}
+
+				
 				?>
   
 				<button type="submit" class="signup"style="background-color: #0439aa;">Login</button>
 				<label>
 				<input type="checkbox" checked="checked" name="remember"> Remember me
 				</label>
-			</div>
-		
-			<div class="container" style="background-color:#f1f1f1">
-				<!-- <span class="psw">Forgot <a href="#">password?</a></span> -->
-				<button type="button" style="background-color: #0439aa;">
-					<a href="../pages/clientRegistration.php" class="signup">
-						Don't have an Account? Sign up now!
-					</a>
-				</button>
-			</div>
+			
 		</form>
 	</section>
 
