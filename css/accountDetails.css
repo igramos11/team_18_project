@@ -217,9 +217,14 @@ select:hover{
 }
 
 .zip-container {
+<<<<<<< HEAD
     display: inline-block;
     align-items: center;
 	width: 50%
+=======
+    display: flex;
+    align-items: center;
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
 }
 
 .zip-container input {
@@ -280,4 +285,8 @@ hr {
 
 b{
 	font-weight: lighter;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <?php
-	include('../php/loginAction.php');
+	// include('../php/loginAction.php');
 ?>
 <html>
 
@@ -46,10 +46,6 @@
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <div class="dropdown-content">
-<<<<<<< HEAD
-                        <!-- <a href="#">Profile Management</a> -->
-=======
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                         <a href="#">Account Details</a>
                         <a href="../index.php">Log Out</a>
                     </div>
@@ -66,72 +62,39 @@
 
 <body>
     <div class="grid-container">
-<<<<<<< HEAD
-        <div class="grid-item aboutInfo">
-            <h2 class="name"><?php echo $row['firstName'] . ' ' . $row['lastName']?></h2>
-            <p id="displayEmail"><?php echo $row['email']?></p>
-            <h2 id="about">About</h2>
-            <p><?php echo '@' . $row['Username']?></p>
-            <p><?php echo '<b>Phone: </b>'. $row['phoneNumber']?></p>
-            <p><span style="font-weight: 600">Shipping Address:</span><br>
-            <?php echo $row['Address'] . ', ';
-            if($row['APT']) {
-                echo $row['APT'] . ', ';
-            }
-            echo $row['City'] . ', ' . $row['State'] . ', ' . $row['zipCode']?>
-            </p>
-
-        </div>
-=======
 
         </div>
         <div class="document">
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
         <div class="grid-item">
-            <form action="../php/accountDetailsAction.php" method="POST">
+            <form action="../php/completeProfileAction.php" method="POST">
                 <div class="grid-container2">
                     <h3>Personal Details</h3>
                     <div class="grid-item2">
                         <div class="flex-grid">
                             <div class="col">
-<<<<<<< HEAD
-                                <label for="firstName"><b>First name:</b></label>
-                                <input type="text" name="firstName" id="firstName" required value="<?= $row['firstName'] ?>" value=<?= $row['firstName'] ?> >
+                                <label for="firstName"><b><span class="required"></span>First name:</b></label>
+                                <input type="text" name="firstName" id="firstName" maxlength="25" placeholder="<?php if ($row['firstName'])
+                                                                                                                echo $row['firstName'];
+                                                                                                            else echo 'Enter first name';?>" value="<?= $row['firstName']?>" required>
+
+                                <label for="lastName"><b><span class="required"></span>Last name:</b></label>
+                                <input type="text" name="lastName" id="lastName" maxlength="25" placeholder="<?php if ($row['lastName'])
+                                                                                                                echo $row['lastName'];
+                                                                                                            else echo 'Enter last name';?>" value="<?= $row['lastName']?>" required>
 
                             </div>
                             <div class="col">
-                                <label for="lastName"><b>Last name:</b></label>
-                                <input type="text" name="lastName" id="lastName" placeholder="<?= $row['lastName'] ?>" value=<?= $row['lastName'] ?> >
 
                                 <label for="phoneNumber"><b>Phone number:</b></label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" placeholder="<?php if ($row['phoneNumber'])
                                                                                                                 echo $row['phoneNumber'];
                                                                                                             else echo 'Enter phone number';?>" value=<?= $row['phoneNumber']?>>
-=======
-                                <label for="First_name"><b><span class="required"></span>First name:</b></label>
-                                <input type="text" name="First_name" id="First_name" maxlength="25" placeholder="<?php if ($row['First_name'])
-                                                                                                                echo $row['First_name'];
-                                                                                                            else echo 'Enter first name';?>" value="<?= $row['First_name']?>" required>
 
-                                <label for="Last_name"><b><span class="required"></span>Last name:</b></label>
-                                <input type="text" name="Last_name" id="Last_name" maxlength="25" placeholder="<?php if ($row['Last_name'])
-                                                                                                                echo $row['Last_name'];
-                                                                                                            else echo 'Enter last name';?>" value="<?= $row['Last_name']?>" required>
+                                <label for="email"><b>Email:</b></label>
+                                <input type="text" name="email" id="email" placeholder="<?php if ($row['email'])
+                                                                                                echo $row['email'];
+                                                                                            else echo 'Enter Email';?>" value="<?= $row['email']?>"> 
 
-                            </div>
-                            <div class="col">
-
-                                <label for="Phone_number"><b>Phone number:</b></label>
-                                <input type="text" name="Phone_number" id="Phone_number" placeholder="<?php if ($row['Phone_number'])
-                                                                                                                echo $row['Phone_number'];
-                                                                                                            else echo 'Enter phone number';?>" value=<?= $row['Phone_number']?>>
-
-                                <label for="Email"><b>Email:</b></label>
-                                <input type="text" name="Email" id="Email" placeholder="<?php if ($row['Email'])
-                                                                                                echo $row['Email'];
-                                                                                            else echo 'Enter Email';?>" value="<?= $row['Email']?>"> 
-
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                             </div>
                         </div>
                     </div>
@@ -141,49 +104,6 @@
                     <div class="grid-item2">
                         <div class="flex-grid">
                             <div class="col">
-<<<<<<< HEAD
-                                <label for="Address"><b>Street address:</b></label>
-                                <input type="text" name="Address" id="Address" placeholder="<?= $row['Address'] ?>" value="<?= $row['Address'] ?>">
-
-                                <label for="APT"><b>APT:</b></label>
-                                <input type="text" name="APT" id="APT" placeholder="<?php if ($row['APT'])
-                                                                                                echo $row['APT'];
-                                                                                            else echo 'Enter APT';?>" value="<?= $row['APT'] ?>" >
-
-                                <label for="Zip"><b>Zipcode:</b></label>
-                                <input type="text" name="Zipcode" id="Zipcode" placeholder="<?= $row['Zipcode'] ?>" value=<?= $row['Zipcode'] ?>>
-                            </div>
-                            <div class="col">
-                                <label for="City"><b>City:</b></label>
-                                <input type="text" name="City" id="City" placeholder="<?= $row['City'] ?>" value=<?= $row['City'] ?>>
-
-                                <label for="State"><b>State:</b></label>
-                                <input type="text" name="State" id="State" placeholder="<?= $row['State'] ?>" value=<?= $row['State'] ?>>
-                            </div>
-                        </div>
-                    </div>
-                    <h3>
-                        <hr>Account Details
-                    </h3>
-                    <div class="grid-item2">
-                        <div class="flex-grid">
-                            <div class="col">
-                                <label for="Username"><b>*Username: </b><i style="font-size: 14px">Required</i></label>
-                                <input type="text" name="Username" id="Username" placeholder="<?= $row['Username'] ?>" value =<?= $row['Username'] ?> required>
-                            </div>
-                            <div class="col">
-                                <label for="Password"><b>*Password: </b><i style="font-size: 14px">Required</i></label>
-                                <input type="password" name="Password" id="Password" placeholder="Enter password" onkeyup="matchPasswords()" required>
-
-                                <label for="RePassword"><b>*Re-enter Password: </b><i style="font-size: 14px">Required</i></label>
-                                <input type="password" name="RePassword" id="RePassword" placeholder="Enter password" onkeyup="matchPasswords()" required>
-                                <div id="confirmPassword">❗ Passwords do not match.</div>
-
-                                <input type="hidden" name="User_ID" value=<?= $_SESSION['user_id'] ?>>
-                            </div>
-                        </div>
-                    </div>
-=======
                                 <label for="Adress_1"><b><span class="required"></span>Address 1:</b></label>
                                 <input type="text" name="Address_1" id="Address_1" maxlength="100" placeholder="<?php if ($row['Address_1'])
                                                                                                                 echo $row['Address_1'];
@@ -278,7 +198,6 @@
                     </div>
         </div>
                 
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                     <h3>
                         <hr>
                         <?php
@@ -306,22 +225,4 @@
     </div>
 </body>
 
-<<<<<<< HEAD
-<script>
-    function matchPasswords() {
-        if (document.getElementById('Password').value ==
-            document.getElementById('RePassword').value) {
-            document.getElementById('update').disabled = false;
-            document.getElementById('update').style = "cursor: pointer";
-            document.getElementById('confirmPassword').style.display = "none";
-        } else {
-            document.getElementById('update').disabled = true;
-            document.getElementById('update').style = "cursor: not-allowed";
-            document.getElementById('confirmPassword').style.display = "block";
-        }
-    }
-</script>
-
-=======
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
 </html>

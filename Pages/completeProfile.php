@@ -4,17 +4,35 @@
 <?php
     require_once "../php/config.php";
     require_once "../php/functions.php";
-   
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['login_user'])) {
+    // If not, redirect to the login page
+    header('Location: ../pages/login.php');
+    exit;
+}
+
+// If logout is requested, destroy the session and redirect to the current page
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+echo '<p style="font-size: 20px; font-weight: bold;">Welcome, ' . htmlspecialchars($_SESSION['login_user']) . '!</p>';
 
 
-    $User_ID = $_SESSION['user_id'];
-    $sql = "SELECT firstName, lastName, Address, APT, City, State, ZipCode, Username FROM `user` WHERE User_ID = ?;";
-    $stmt = mysqli_stmt_init($conn);
-    mysqli_stmt_prepare($stmt, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $User_ID);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
+$userId = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM user WHERE User_ID = ?");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+}
 
 ?>
 
@@ -23,6 +41,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Team 18 Complete Profile page</title>
     <link rel="stylesheet" type="text/css" href="../css/accountDetails.css">
+<<<<<<< HEAD
+=======
+
+    <script>
+    window.onload = function() {
+        const requiredFields = [
+            'firstName',
+            'lastName',
+            'phoneNumber',
+            'Address',
+            'ZipCode',
+            'City',
+            'State',
+            'Username',
+            'email'
+            'proftiMargin'
+        ];
+
+        let form = document.querySelector('form');
+
+        form.addEventListener('input', function () {
+            let isFormValid = requiredFields.every(function (fieldId) {
+                let field = document.querySelector(`input[name=${fieldId}]`);
+                return field && field.value;
+            });
+
+            document.querySelector('#completeProfile').disabled = !isFormValid;
+        });
+    }
+</script>
+
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
 </head>
 
 <header>
@@ -43,12 +93,17 @@
 
         </div>
         <div class="welcome-message">
+<<<<<<< HEAD
             <h2>Welcome! Please complete your user profile.</h2>
+=======
+            <h2>Please complete your user profile.</h2>
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
         </div>
         <div class="document">
         <div class="grid-item">
             <form action="../php/completeProfileAction.php" method="POST">
                 <div class="grid-container2">
+<<<<<<< HEAD
                     <h3>Personal Details</h3>
                     <div class="grid-item2">
                         <div class="flex-grid">
@@ -75,6 +130,21 @@
                                 <input type="text" name="email" id="email" placeholder="<?php if ($row['email'])
                                                                                                 echo $row['email'];
                                                                                             else echo 'Enter Email';?>" value="<?= $row['email']?>"> 
+=======
+                <h3>Personal Details</h3>
+                    <div class="grid-item2">
+                        <div class="flex-grid">
+                            <div class="col">
+                                <label for="firstName"><b>First name:</b></label>
+                                <input type="text" name="firstName" required value="<?php echo isset($user['firstName']) ? htmlspecialchars($user['firstName']) : ''; ?>">
+                            </div>
+                            <div class="col">
+                                <label for="lastName"><b>Last name:</b></label>
+                                <input type="text" name="lastName" required value="<?php echo isset($user['lastName']) ? $user['lastName'] : ''; ?>">
+
+                                <label for="phoneNumber"><b>Phone number:</b></label>
+                                <input type="text" name="phoneNumber" required placeholder="<?php echo (isset($user['phoneNumber']) && $user['phoneNumber'] != '') ? $user['phoneNumber'] : 'Enter phone number'; ?>" value="<?php echo (isset($user['phoneNumber']) && $user['phoneNumber'] != '') ? $user['phoneNumber'] : ''; ?>">
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
 
                             </div>
                         </div>
@@ -85,6 +155,7 @@
                     <div class="grid-item2">
                         <div class="flex-grid">
                             <div class="col">
+<<<<<<< HEAD
                                 <label for="Adress_1"><b><span class="required"></span>Address 1:</b></label>
                                 <input type="text" name="Address" id="Address" maxlength="100" placeholder="<?php if ($row['Address'])
                                                                                                                 echo $row['Address'];
@@ -183,6 +254,62 @@
                     </div>
         </div>
                 
+=======
+                                <label for="Address"><b>Street address:</b></label>
+                                <input type="text" name="Address" required value="<?php echo isset($user['Address']) ? $user['Address'] : ''; ?>">
+
+                                <label for="APT"><b>APT:</b></label>
+                                <input type="text" name="APT" id="APT" placeholder="<?php if ($user['APT'])
+                                                                                                echo $user['APT'];
+                                                                                            else echo 'Enter APT';?>" value="<?= $user['APT'] ?>" >
+
+                                <label for="Zip"><b>Zipcode:</b></label>
+                                <input type="text" name="ZipCode" required value="<?php echo isset($user['ZipCode']) ? $user['ZipCode'] : ''; ?>">
+
+                            </div>
+                            <div class="col">
+                                <label for="City"><b>City:</b></label>
+                                <input type="text" name="City" required value="<?php echo isset($user['City']) ? $user['City'] : ''; ?>">
+
+                                <label for="State"><b>State:</b></label>
+                                <input type="text" name="State" required value="<?php echo isset($user['State']) ? $user['State'] : ''; ?>">
+
+                            </div>
+                        </div>
+                    </div>
+                    <h3>
+                        <hr>Account Details
+                    </h3>
+                    <div class="grid-item2">
+                        <div class="flex-grid">
+                            <div class="col">
+                                <label for="Username"><b>*Username: </b><i style="font-size: 14px"></i></label>
+                                <input type="text" name="Username" required value="<?php echo isset($user['Username']) ? htmlspecialchars($user['Username']) : ''; ?>">
+
+                            <div class="col">
+                                <label for="email"><b>*Email: </b><i style="font-size: 14px"></i></label>
+                                <input type="email" name="email" required value="<?php echo isset ($user['email']) ? $user['email'] : '';?> ">
+                            </div>
+
+                            <div class="col">
+                                <label for="profitMargin"><b>Company Profit Margin: </b><i style="font-size: 14px"></i></label>
+                                <input type="number" name="profitMargin" step="0.01" min="0" value="<?php echo isset($user['profitMargin']) ? $user['profitMargin'] : ''; ?>">
+                            </div>
+
+                            </div>
+
+                            <div class="col">
+                                <label for="Password"><b>Password: </b><i style="font-size: 14px">(fill only if you want to change your password)</i></label>
+                                <input type="password" name="Password" id="Password" placeholder="Enter new password" onkeyup="matchPasswords()">
+
+                                <label for="RePassword"><b>Re-enter Password: </b><i style="font-size: 14px">(fill only if you want to change your password)</i></label>
+                                <input type="password" name="RePassword" id="RePassword" placeholder="Re-enter new password" onkeyup="matchPasswords()">
+                                <div id="confirmPassword">❗ Passwords do not match.</div>
+                            </div>
+
+                        </div>
+                    </div>
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                     <h3>
                         <hr>
                         <?php
@@ -201,8 +328,13 @@
                         ?>
                     </h3>
                     <div class="grid-item2 buttons">
+<<<<<<< HEAD
                         <button id="cancel" onclick="location.href='user.php';">Cancel</button>
                         <button id="update" type="submit">Complete Profile</button>
+=======
+                    <button id="completeProfile" type="submit">Complete Profile</button>
+
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                     </div>
                 </div>
             </form>

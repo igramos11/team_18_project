@@ -62,9 +62,26 @@ if (isset($_SESSION['login_user'])) {
 		<div style="width: 50%; text-align: center;">
 			<h2 class="text-center">Get Started with a Fuel Quote</h2>
 			<div class="button-container" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+<<<<<<< HEAD
 				<a href="pages/login.php" style="color: white; background-color: #0439aa; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Login</a>
 				<a href="pages/signup.php" style="color: white; background-color: #0439aa; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Sign Up</a>
 			</div>
+=======
+    <?php
+        if(!isset($_SESSION['login_user'])) { // if user is not logged in
+    ?>
+        <a href="pages/login.php" style="color: white; background-color: #0439aa; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Login</a>
+        <a href="pages/signup.php" style="color: white; background-color: #0439aa; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Sign Up</a>
+    <?php
+        } else { // if user is logged in
+    ?>
+        <a href="pages/userDashboard.php" style="color: white; background-color: #0439aa; padding: 10px 20px; text-decoration: none; border-radius: 5px;">User Dashboard</a>
+    <?php
+        }
+    ?>
+</div>
+
+>>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
 		</div>
 	</section>
 </section>
