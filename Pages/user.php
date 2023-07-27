@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <?php
-
     require_once "../php/functions.php";
     require_once "../php/config.php";
 
-    // Start the session
     session_start();
 
-    // Check if the user is logged in
     if (!isset($_SESSION['login_user'])) {
-        // If not, redirect to the login page
         header('Location: ../pages/login.php');
         exit;
     }
-    // If logout is requested, destroy the session and redirect to the current page
+
     if (isset($_GET['logout'])) {
-    session_destroy();
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
+        session_destroy();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
     }
 
     echo '<p style="font-size: 20px; font-weight: bold;">Welcome, ' . htmlspecialchars($_SESSION['login_user']) . '!</p>';
-
 
     $UserId = $_SESSION['user_id'];
     $sql = "SELECT * FROM `user` WHERE User_ID = '$UserId'";
@@ -31,27 +26,39 @@
     $City=$row['City'];
     $State=$row['State'];
     $ZipCode=$row['ZipCode'];
-   	if(isset($_POST['submit'])){
-	   $UserId = $_SESSION['user_id'];
-	   $User = $UserId;
-       $Address=$_POST['Address'];
-       $City=$_POST['City'];
-       $State=$_POST['State'];
-       $ZipCode=$_POST['ZipCode'];
-	   $Gal = $_POST['Gallons'];
-	   $Total = CalculateTotal($conn,$Gal,$User, $State);
-	   $Date= $_POST['Date'];
-	   $stmt = $conn->prepare("INSERT INTO `order` (User_ID, Street_delivered_to, City_delivered_to, State_delivered_to, Zip_code_delivered_to, Gallons, Order_total, Date_of_purchase) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-       if (!empty($conn->error_list)) {
-        print_r($conn->error_list);
+    $profitMargin=ProfitMarginRate($row['profitMargin']) * 100;
+
+    if(isset($_POST['submit'])){
+        $UserId = $_SESSION['user_id'];
+        $User = $UserId;
+        $Address=$_POST['Address'];
+        $City=$_POST['City'];
+        $State=$_POST['State'];
+        $ZipCode=$_POST['ZipCode'];
+        $Gallons = $_POST['Gallons'];
+        if (!$Gallons || $Gallons <= 0) {
+            $_SESSION['flash'] = "Invalid Gallons entered. Please enter a number greater than 0.";
+            header('Location: ' . $_SERVER['PHP_SELF']);
+            exit;
         }
-	   $stmt->bind_param("isssssds",$User, $Address, $City, $State, $ZipCode, $Gal, $Total, $Date);
-	   $stmt->execute();
-       $_SESSION['flash'] = "Your order has been submitted. Check the Quote History tab to view your order history.";
-	   $Order_ID = $stmt->insert_id;
-	   $stmt->close();
+        $Date = filter_input(INPUT_POST, 'Date', FILTER_SANITIZE_STRING);
+
+        $profitMargin = $_POST['profitMargin'];
+        $Order_total = CalculateTotal($conn, $Gallons, $User_ID, $State, $profitMargin);
+
+        $stmt = $conn->prepare("INSERT INTO `orders` (User_ID, Address, City, State, ZipCode, Gallons, Order_total, Date, profitMargin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        if (!empty($conn->error_list)) {
+            print_r($conn->error_list);
+        }
+        $stmt->bind_param("issssiisd", $User, $Address, $City, $State, $ZipCode, $Gallons, $Order_total, $Date, $profitMargin);
+        $stmt->execute();
+        $_SESSION['flash'] = "Your order has been submitted. Check the Quote History tab to view your order history.";
+        $Order_ID = $stmt->insert_id;
+        $stmt->close();
     }
 ?>
+
 
 <html lang="en">
 <style>
@@ -158,6 +165,12 @@
                             <span class="data-title">Gallons:</span>
                         </label>
                         <input type="text" class="input_box" inputmode="numeric" pattern="\d*" name="Gallons" required>
+                    </div>
+                    <div class="">
+                        <label style="display: block;"> 
+                            <span class="data-title">Company's Profit Margin (%):</span>
+                        </label>
+                        <input type="text" class="input_box" name="profitMargin" value="<?php echo $profitMargin;?>" readonly required>
                     </div>
                     <div class="">
                         <label style="display: block;">

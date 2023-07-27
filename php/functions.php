@@ -120,58 +120,61 @@ function validate($data){
     $stmt->close();
 }
 
-
-
-
-
-
 function PreviousQuotes($conn, $User_ID){
-    //SQL Query HERE//
-    $sql = "SELECT EXISTS(SELECT * FROM `Order` WHERE User_ID= '$User_ID')";
-    $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
-    $row=mysqli_fetch_assoc($result);
-    if($row["EXISTS(SELECT * FROM `Order` WHERE User_ID= '$User_ID')"] === '1'){
-        $Rate = .01;
-        return  $Rate;
+    $sql = "SELECT COUNT(*) AS num_orders FROM `orders` WHERE User_ID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $User_ID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    if($row['num_orders'] > 0){
+        return .01; // Rate for users with previous orders
     }
     else{
-        $Rate = .0;
-        return $Rate;
+        return .00; // Rate for new users
     }
 }
 
-function State_or_Outside($conn, $State){
+function State_or_Outside($State){
     if($State === 'TX'){
-        $Rate = .02;
-        return $Rate;
+        return .02; // Rate for users in TX
     }
     else{
-        $Rate = .04;
-        return $Rate;
+        return .04; // Rate for users outside TX
     }
 }
 
-function GallonsRequested($conn,$num){
+function GallonsRequested($num){
     if($num >= 1000){
-        $R = .02;
-        return $R;
+        return .02; // Rate for users ordering 1000 or more gallons
     }
     else{
-        $R = .03;
-        return $R;
+        return .03; // Rate for users ordering less than 1000 gallons
     }
 }
-        
-        function CalculateTotal($conn, $Gallns, $User_ID, $St){
-            $CurrentPrice = 1.50;
-            $RateHistory=PreviousQuotes($conn,$User_ID);
-            $Location = State_or_Outside($conn, $St);
-            $Gallons = GallonsRequested($conn, $Gallns);
-            $Company = .1;
-            // echo $Gallons;
-            $Mrg = ($Location-$RateHistory+$Gallons+$Company) * $CurrentPrice;
-            $Margin = $CurrentPrice+ $Mrg;
-            $SuggestedPrice = $Gallns * $Margin;
-            return $SuggestedPrice;
-        }
-        
+
+function ProfitMarginRate($profitMargin){
+    if ($profitMargin <= .10){
+        return .05; // If profitMargin is less than or equal to 0.10, return 0.05
+    }
+    else if ($profitMargin >= .11 && $profitMargin <= .50 ){
+        return .10; // If profitMargin is between 0.11 and 0.50, return 0.10
+    }
+    else {
+        return .15; // If profitMargin is greater than 0.50, return 0.15
+    }
+}
+
+
+function CalculateTotal($conn, $Gallons, $User_ID, $State, $profitMargin){
+    
+    $RateHistory = PreviousQuotes($conn, $User_ID);
+    $Location = State_or_Outside($State);
+    $GallonsRequested = GallonsRequested($Gallons);
+    $ProfitMarginRate = ProfitMarginRate($profitMargin);
+    $OverallRate = ($Location + $RateHistory + $GallonsRequested + $ProfitMarginRate);
+    $Order_total = $OverallRate * $Gallons;
+
+    return ($Order_total);
+}
+

@@ -160,7 +160,7 @@ if ($result->num_rows > 0) {
             <tr>
                 <?php
                 $UserId = $_SESSION['user_id'];
-                $sql = "SELECT COUNT(*) AS order_count, SUM(Order_total) AS total_sales FROM `Order` WHERE User_ID = '$UserId'";
+                $sql = "SELECT COUNT(*) AS order_count, SUM(Order_total) AS total_sales FROM `orders` WHERE User_ID = '$UserId'";
                 $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
                 $row = mysqli_fetch_assoc($result);
                 $orderCount = $row['order_count'];
@@ -186,17 +186,18 @@ if ($result->num_rows > 0) {
                     <th>Date of Purchase</th>
                 </tr>
                 <?php
-                $sql = "SELECT * FROM `Order` WHERE User_ID = '$UserId'";
+                $sql = "SELECT * FROM `orders` WHERE User_ID = '$UserId'";
                 $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
                 while($row = mysqli_fetch_assoc($result)){
                     $id = $row['Order_ID'];
-                    $street = $row['Street_delivered_to'];
-                    $city = $row['City_delivered_to'];
-                    $state = $row['State_delivered_to'];
-                    $zip = $row['Zip_code_delivered_to'];
+                    $street = $row['Address'];
+                    $city = $row['City'];
+                    $state = $row['State'];
+                    $zip = $row['ZipCode'];
                     $gallons = $row['Gallons'];
                     $total = $row['Order_total'];
-                    $dateOfPurchase = $row['Date_of_purchase'];
+                    $dateOfPurchase = $row['Date'];
+                    $profitMargin = $row['profitMargin'];
 
                     echo '<tr>';
                     echo '<td style="color: black;">'.$id.'</td>';
