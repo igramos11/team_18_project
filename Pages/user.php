@@ -26,7 +26,7 @@
     $City=$row['City'];
     $State=$row['State'];
     $ZipCode=$row['ZipCode'];
-    $profitMargin=ProfitMarginRate($row['profitMargin']) * 100;
+    $profitMargin=$row['profitMargin'] * 100;
 
     if(isset($_POST['submit'])){
         $UserId = $_SESSION['user_id'];

@@ -46,10 +46,6 @@
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <div class="dropdown-content">
-<<<<<<< HEAD
-                        <!-- <a href="#">Profile Management</a> -->
-=======
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                         <a href="#">Account Details</a>
                         <a href="../index.php">Log Out</a>
                     </div>
@@ -66,27 +62,9 @@
 
 <body>
     <div class="grid-container">
-<<<<<<< HEAD
-        <div class="grid-item aboutInfo">
-            <h2 class="name"><?php echo $row['firstName'] . ' ' . $row['lastName']?></h2>
-            <p id="displayEmail"><?php echo $row['email']?></p>
-            <h2 id="about">About</h2>
-            <p><?php echo '@' . $row['Username']?></p>
-            <p><?php echo '<b>Phone: </b>'. $row['phoneNumber']?></p>
-            <p><span style="font-weight: 600">Shipping Address:</span><br>
-            <?php echo $row['Address'] . ', ';
-            if($row['APT']) {
-                echo $row['APT'] . ', ';
-            }
-            echo $row['City'] . ', ' . $row['State'] . ', ' . $row['zipCode']?>
-            </p>
-
-        </div>
-=======
 
         </div>
         <div class="document">
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
         <div class="grid-item">
             <form action="../php/accountDetailsAction.php" method="POST">
                 <div class="grid-container2">
@@ -94,20 +72,6 @@
                     <div class="grid-item2">
                         <div class="flex-grid">
                             <div class="col">
-<<<<<<< HEAD
-                                <label for="firstName"><b>First name:</b></label>
-                                <input type="text" name="firstName" id="firstName" required value="<?= $row['firstName'] ?>" value=<?= $row['firstName'] ?> >
-
-                            </div>
-                            <div class="col">
-                                <label for="lastName"><b>Last name:</b></label>
-                                <input type="text" name="lastName" id="lastName" placeholder="<?= $row['lastName'] ?>" value=<?= $row['lastName'] ?> >
-
-                                <label for="phoneNumber"><b>Phone number:</b></label>
-                                <input type="text" name="phoneNumber" id="phoneNumber" placeholder="<?php if ($row['phoneNumber'])
-                                                                                                                echo $row['phoneNumber'];
-                                                                                                            else echo 'Enter phone number';?>" value=<?= $row['phoneNumber']?>>
-=======
                                 <label for="First_name"><b><span class="required"></span>First name:</b></label>
                                 <input type="text" name="First_name" id="First_name" maxlength="25" placeholder="<?php if ($row['First_name'])
                                                                                                                 echo $row['First_name'];
@@ -131,7 +95,6 @@
                                                                                                 echo $row['Email'];
                                                                                             else echo 'Enter Email';?>" value="<?= $row['Email']?>"> 
 
->>>>>>> cd4035980c59e7130f7ba455a54f2747495162c7
                             </div>
                         </div>
                     </div>
