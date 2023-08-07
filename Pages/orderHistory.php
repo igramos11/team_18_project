@@ -181,6 +181,7 @@ if ($result->num_rows > 0) {
                     <th>City</th>
                     <th>State</th>
                     <th>Zip</th>
+                    <th>Suggested Price per Gallon</th>
                     <th>Gallons</th>
                     <th>Total</th>
                     <th>Date of Purchase</th>
@@ -194,6 +195,7 @@ if ($result->num_rows > 0) {
                     $city = $row['City'];
                     $state = $row['State'];
                     $zip = $row['ZipCode'];
+                    $OverallRate = $row['OverallRate'];
                     $gallons = $row['Gallons'];
                     $total = $row['Order_total'];
                     $dateOfPurchase = $row['Date'];
@@ -205,6 +207,7 @@ if ($result->num_rows > 0) {
                     echo '<td style="color: black;">'.$city.'</td>';
                     echo '<td style="color: black;">'.$state.'</td>';
                     echo '<td style="color: black;">'.$zip.'</td>';
+                    echo '<td style="color: black;">'.$OverallRate.'</td>';
                     echo '<td style="color: black;">'.$gallons.'</td>';
                     echo '<td style="color: black;">$'.$total.'</td>';
                     echo '<td style="color: black;">'.$dateOfPurchase.'</td>';

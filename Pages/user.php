@@ -44,15 +44,28 @@
         $Date = filter_input(INPUT_POST, 'Date', FILTER_SANITIZE_STRING);
 
         $profitMargin = $_POST['profitMargin'];
+        $currentRate = 1.50;
+        $RateHistory = PreviousQuotes($conn, $User_ID);
+        $Location = State_or_Outside($State);
+        $GallonsRequested = GallonsRequested($Gallons);
+        $ProfitMarginRate = ProfitMarginRate($profitMargin);
+        $OverallRate = ($Location + $RateHistory + $GallonsRequested + $ProfitMarginRate) + $currentRate;
+
         $Order_total = CalculateTotal($conn, $Gallons, $User_ID, $State, $profitMargin);
 
-        $stmt = $conn->prepare("INSERT INTO `orders` (User_ID, Address, City, State, ZipCode, Gallons, Order_total, Date, profitMargin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO `orders` (User_ID, Address, City, State, ZipCode, OverallRate, Gallons, Order_total, Date, profitMargin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         if (!empty($conn->error_list)) {
             print_r($conn->error_list);
         }
-        $stmt->bind_param("issssiisd", $User, $Address, $City, $State, $ZipCode, $Gallons, $Order_total, $Date, $profitMargin);
+        $stmt->bind_param("issssdiisd", $User, $Address, $City, $State, $ZipCode, $OverallRate, $Gallons, $Order_total, $Date, $profitMargin);
         $stmt->execute();
+        if($stmt->execute()) {
+            echo "Insert successful!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        
         $_SESSION['flash'] = "Your order has been submitted. Check the Quote History tab to view your order history.";
         $Order_ID = $stmt->insert_id;
         $stmt->close();
@@ -203,7 +216,7 @@
                         </label>
                         <input type="date" class="input_box" name="Date" value="" required>
                     </div>
-                    <button type="submit" class="block" name="submit">Generate</button>
+                    <button type="submit" class="block" name="submit">Get Quote</button>
                 </form>
 			</div>
 

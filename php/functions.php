@@ -168,11 +168,12 @@ function ProfitMarginRate($profitMargin){
 
 function CalculateTotal($conn, $Gallons, $User_ID, $State, $profitMargin){
     
+    $currentRate = 1.50;
     $RateHistory = PreviousQuotes($conn, $User_ID);
     $Location = State_or_Outside($State);
     $GallonsRequested = GallonsRequested($Gallons);
     $ProfitMarginRate = ProfitMarginRate($profitMargin);
-    $OverallRate = ($Location + $RateHistory + $GallonsRequested + $ProfitMarginRate);
+    $OverallRate = ($Location + $RateHistory + $GallonsRequested + $ProfitMarginRate) + $currentRate;
     $Order_total = $OverallRate * $Gallons;
 
     return ($Order_total);
