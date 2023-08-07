@@ -20,11 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apt = trim($_POST['APT']);
     $city = trim($_POST['City']);
     $state = trim($_POST['State']);
-    
     $zipCode = trim($_POST['ZipCode']);
+    $profitMargin = trim($_POST['profitMargin']);
+
 
     // Validate the form data
-    if (empty($firstName) || empty($lastName) || empty($email) || empty($phoneNumber) || empty($address) || empty($city) || empty($state) || empty($zipCode)) {
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($phoneNumber) || empty($address) || empty($city) || empty($state) || empty($zipCode) || empty($profitMargin)) {
         // Redirect back to form with error message
         header("Location: completeProfile.php?error=emptyfields");
         exit();
@@ -41,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert the additional user information into the database (example using prepared statements)
     require_once "config.php";
-    $stmt = $conn->prepare("UPDATE user SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, Address = ?, APT = ?, City = ?, State = ?, ZipCode = ? WHERE User_ID = ?");
-    $stmt->bind_param("sssssssssi", $firstName, $lastName, $email, $phoneNumber, $address, $apt, $city, $state, $zipCode, $userId);
+    $stmt = $conn->prepare("UPDATE user SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, Address = ?, APT = ?, City = ?, State = ?, ZipCode = ?, profitMargin = ? WHERE User_ID = ?");
+    $stmt->bind_param("sssssssssdi", $firstName, $lastName, $email, $phoneNumber, $address, $apt, $city, $state, $zipCode, $profitMargin, $userId);
     $stmt->execute();
     $stmt->close();
     $conn->close();

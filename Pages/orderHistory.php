@@ -206,7 +206,7 @@ if ($result->num_rows > 0) {
                     echo '<td style="color: black;">'.$state.'</td>';
                     echo '<td style="color: black;">'.$zip.'</td>';
                     echo '<td style="color: black;">'.$gallons.'</td>';
-                    echo '<td style="color: black;">'.$total.'</td>';
+                    echo '<td style="color: black;">$'.$total.'</td>';
                     echo '<td style="color: black;">'.$dateOfPurchase.'</td>';
                     echo '</tr>';
 

@@ -212,7 +212,7 @@ echo (isset($user['City']) ? htmlspecialchars($user['City']) : '') . ', ' . (iss
                                 <div class="col">
                                 <label for="profitMargin"><b>Company Profit Margin (%): </b><i style="font-size: 14px"></i></label>
                                 <input type="range" name="profitMargin" min="0" max="100" step="0.01" value="<?php echo isset($user['profitMargin']) ? $user['profitMargin'] * 100 : ''; ?>">
-                                <span id="profitMarginValue"><?php echo isset($user['profitMargin']) ? $user['profitMargin'] * 100 : '0'; ?>%</span>
+                                <span id="profitMarginValue"><?php echo isset($user['profitMargin']) ? $user['profitMargin'] : '0'; ?>%</span>
 
                             </div>
 

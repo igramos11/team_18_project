@@ -54,7 +54,7 @@ if ($result->num_rows > 0) {
             'State',
             'Username',
             'email'
-            'proftiMargin'
+            'profitMargin'
         ];
 
         let form = document.querySelector('form');
@@ -156,8 +156,9 @@ if ($result->num_rows > 0) {
                             </div>
 
                             <div class="col">
-                                <label for="profitMargin"><b>Company Profit Margin: </b><i style="font-size: 14px"></i></label>
-                                <input type="number" name="profitMargin" required value="<?php echo isset($user['profitMargin']) ? $user['profitMargin'] : ''; ?>">
+                            <label for="profitMargin"><b>Company Profit Margin (%): </b><i style="font-size: 14px"></i></label>
+                                <input type="range" name="profitMargin" min="0" max="100" step="0.01" value="<?php echo isset($user['profitMargin']) ? $user['profitMargin'] * 100 : ''; ?>">
+                                <span id="profitMarginValue"><?php echo isset($user['profitMargin']) ? $user['profitMargin'] * 100 : '0'; ?>%</span>
                             </div>
 
                             </div>
@@ -199,5 +200,11 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 </body>
+
+<script>
+  document.getElementsByName('profitMargin')[0].oninput = function() {
+    document.getElementById('profitMarginValue').innerText = this.value + "%";
+}
+</script>
 
 </html>

@@ -14,7 +14,7 @@
         }
 
         /**
-         * @coversNothing
+         * @coversNothings
          */
         private function _executePOST(array $params = array(), $filename){
             $_POST = $params;
